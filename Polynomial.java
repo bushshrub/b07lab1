@@ -22,7 +22,9 @@ public class Polynomial {
     }
 
     /**
-     * Adds the given polynomial to this polynomial. The sum is carried out by adding the coefficients of the same degree, kind of like in the ring of polynomials.
+     * Adds the given polynomial to this polynomial.
+     * The sum is carried out by adding the coefficients of the same degree,
+     * kind of like in the ring of polynomials.
      * @param p the polynomial to add
      * @return a new polynomial that is the sum of this polynomial and the given polynomial
      */
@@ -31,25 +33,25 @@ public class Polynomial {
         int pDegree = p.coefficients.length;
 
         int maxDegree = Math.max(selfDegree, pDegree);
-        double[] newCoef = new double[maxDegree];
+        double[] newCoefficients = new double[maxDegree];
         for (int i = 0; i < maxDegree; i ++) {
-            double selfCoefHere;
-            double pCoefHere;
+            double selfCoefficientsHere;
+            double pCoefficientsHere;
             if (i < selfDegree) {
-                selfCoefHere = this.coefficients[i];
+                selfCoefficientsHere = this.coefficients[i];
             } else {
-                selfCoefHere = 0;
+                selfCoefficientsHere = 0;
             }
 
             if (i < pDegree) {
-                pCoefHere = p.coefficients[i];
+                pCoefficientsHere = p.coefficients[i];
             } else {
-                pCoefHere = 0;
+                pCoefficientsHere = 0;
             }
-            newCoef[i] = selfCoefHere + pCoefHere;
+            newCoefficients[i] = selfCoefficientsHere + pCoefficientsHere;
         }
 
-        return new Polynomial(newCoef);
+        return new Polynomial(newCoefficients);
     }
 
     /**
