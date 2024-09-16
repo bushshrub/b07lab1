@@ -1,26 +1,24 @@
 public class Polynomial {   
-    private double[] coef;
+    private final double[] coefficients;
     
     public Polynomial() {
-        this.coef = new double[1];
+        this.coefficients = new double[1];
     }
 
     public Polynomial(double[] coefficients) {
-        this.coef = new double[coefficients.length];
-        for (int i = 0; i < coefficients.length; i++) {
-            this.coef[i] = coefficients[i];
-        }
+        this.coefficients = new double[coefficients.length];
+        System.arraycopy(coefficients, 0, this.coefficients, 0, coefficients.length);
     }
 
     public Polynomial add(Polynomial p) {
-        int selfDegree = this.coef.length;
-        int pDegree = p.coef.length;
+        int selfDegree = this.coefficients.length;
+        int pDegree = p.coefficients.length;
 
         int maxDegree = Math.max(selfDegree, pDegree);
         double[] newCoef = new double[maxDegree];
         for (int i = 0; i < maxDegree; i++) {
-            double selfCoef = i < selfDegree ? this.coef[i] : 0;
-            double pCoef = i < pDegree ? p.coef[i] : 0;
+            double selfCoef = i < selfDegree ? this.coefficients[i] : 0;
+            double pCoef = i < pDegree ? p.coefficients[i] : 0;
             newCoef[i] = selfCoef + pCoef;
         }
 
@@ -28,12 +26,12 @@ public class Polynomial {
     }
 
     public double evaluate(double x) {
-        int selfDegree = this.coef.length;
+        int selfDegree = this.coefficients.length;
 
         double accumulator = 0;
 
         for (int i = 0; i < selfDegree; i ++) {
-            accumulator += this.coef[i] * Math.pow(x, i);
+            accumulator += this.coefficients[i] * Math.pow(x, i);
         }
 
         return accumulator;
