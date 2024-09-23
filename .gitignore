@@ -1,6 +1,7 @@
 
 
 ### Java template
+out/
 # Compiled class file
 *.class
 
