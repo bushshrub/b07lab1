@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class Driver {
     public static void main(String [] args) {
         Polynomial p = new Polynomial();
@@ -29,5 +31,12 @@ public class Driver {
         Polynomial p4 = new Polynomial(new double[]{10,5,7,25}, new int[]{0,1,7,31});
         Polynomial p5 = p3.multiply(p4);
         System.out.println("p5 result = " + p5.toString());
+
+        Polynomial p6 = Polynomial.parsePolynomialString("5-3x2+7x8");
+        System.out.println("p6 = " + p6);
+
+        File file = new File("polynomial.txt");
+        Polynomial p7 = new Polynomial(file);
+        p7.saveToFile("output.txt");
     }
 }

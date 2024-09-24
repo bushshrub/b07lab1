@@ -1,7 +1,8 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Polynomial {
@@ -55,13 +56,49 @@ public class Polynomial {
         this.nonZeroCoefficients = coefficients;
     }
 
-//    /**
-//     * Constructs a polynomial given a file.
-//     * @param polynomialFile
-//     */
-//    public Polynomial(File polynomialFile) {
-//
-//    }
+    /**
+     * Constructs a polynomial given a file.
+     * @param polynomialFile
+     */
+    public Polynomial(File polynomialFile) {
+        try {
+            Scanner scanner = new Scanner(polynomialFile);
+            String poly = scanner.nextLine();
+            HashMap<Integer, Double> mapRepresentation = parsePolynomialString(poly).convertToMap();
+
+            int[] exponents = new int[mapRepresentation.size()];
+            double[] coefficients = new double[mapRepresentation.size()];
+            int i = 0;
+            for (Map.Entry<Integer, Double> entry : mapRepresentation.entrySet()) {
+                exponents[i] = entry.getKey();
+                coefficients[i] = entry.getValue();
+                i++;
+            }
+            this.exponents = exponents;
+            this.nonZeroCoefficients = coefficients;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static Polynomial parsePolynomialString(String polyString) {
+        HashMap<Integer, Double> coefficientMap = new HashMap<>();
+        polyString = polyString.replaceAll("[-]", "+-");
+
+        String[] splices = polyString.split("[+]");
+        for (String spl : splices) {
+            if (!spl.contains("x")) {
+                coefficientMap.put(0, Double.parseDouble(spl));
+                continue;
+            }
+            String[] coefficientAndExponent = spl.split("x");
+            // coefficientAndExponent is definitely length 2
+            // exponent is at pos 1, coefficient is pos 0
+            coefficientMap.put(Integer.parseInt(coefficientAndExponent[1]), Double.parseDouble(coefficientAndExponent[0]));
+        }
+        return new Polynomial(coefficientMap);
+    }
 
     /**
      * Adds the given polynomial to this polynomial.
@@ -175,8 +212,42 @@ public class Polynomial {
         TreeMap<Integer, Double> sortedMap = new TreeMap<>(this.convertToMap());
         StringBuilder polynomialString = new StringBuilder();
         for (Map.Entry<Integer, Double> entry : sortedMap.entrySet()) {
-            polynomialString.append(entry.getValue()).append("x^").append(entry.getKey()).append(" + ");
+            // if coefficient is negative, we don't want to print the + sign
+            if (entry.getValue() < 0) {
+                polynomialString.append(entry.getValue());
+            } else {
+                polynomialString.append("+");
+            }
+
+            // if the coefficient is 1, we don't want to print it
+            if (entry.getValue() >= 0 && entry.getValue() != 1) {
+                polynomialString.append(entry.getValue());
+            }
+            // if the exponent is 0, we don't want to print x
+            if (entry.getKey() != 0) {
+                polynomialString.append("x");
+                // if the exponent is 1, we don't want to print it
+                if (entry.getKey() != 1) {
+                    polynomialString.append(entry.getKey());
+                }
+            }
+
         }
+        // remove the first + sign
+        if (!polynomialString.isEmpty() && polynomialString.charAt(0) == '+') {
+            polynomialString.deleteCharAt(0);
+        }
+
         return polynomialString.toString();
+    }
+
+    public void saveToFile(String fileName) {
+        try {
+            try (FileWriter writer = new FileWriter(fileName)) {
+                writer.write(this.toString());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
