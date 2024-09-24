@@ -132,7 +132,6 @@ public class Polynomial {
     }
 
 
-
     /**
      * Multiplies this polynomial with a different polynomial
      * @param p The other polynomial to multiply
